@@ -263,6 +263,33 @@ body{
   display:inline-block;min-width:36px;font-weight:700;
   color:var(--accent-red);margin-right:6px;
 }
+.profile-event .section-head{
+  font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;
+  color:rgba(255,255,255,0.5);margin-top:4px;
+}
+.drawer{margin:8px 0;border:1px solid rgba(255,255,255,0.08);border-radius:8px;overflow:hidden}
+.drawer-toggle{
+  width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);
+  border:none;color:#fff;font-family:inherit;font-size:12px;font-weight:600;
+  text-align:left;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
+  transition:background 0.2s;
+}
+.drawer-toggle:hover{background:rgba(255,255,255,0.08)}
+.drawer-toggle .arrow{transition:transform 0.25s;font-size:10px;opacity:0.5}
+.drawer-toggle.open .arrow{transform:rotate(90deg)}
+.drawer-body{
+  max-height:0;overflow:hidden;transition:max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+  padding:0 14px;font-size:12px;color:rgba(255,255,255,0.75);line-height:1.6;
+}
+.drawer-body.open{max-height:800px;padding:10px 14px 14px}
+.drawer-body p{margin-bottom:8px}
+.drawer-body .timeline-item{padding:6px 0;border-left:2px solid rgba(255,255,255,0.1);padding-left:12px;margin-left:4px;margin-bottom:4px}
+.drawer-body .timeline-item .tdate{font-weight:700;color:var(--accent-red);font-size:11px}
+.drawer-body .unrebutted{
+  margin-top:8px;padding:8px 10px;border-radius:6px;
+  background:rgba(196,30,58,0.08);border:1px solid rgba(196,30,58,0.2);
+  font-weight:600;color:rgba(255,255,255,0.9);font-size:11px;
+}
 .profile-conn{
   display:inline-flex;align-items:center;gap:4px;
   padding:4px 10px;border-radius:12px;
@@ -692,16 +719,16 @@ const PINS = [
       ["San Diego Office","225 Broadway, Unit 2000, San Diego, CA 92101"]
     ],
     events:[
-      {y:"",t:"LARRY S. DUSHKES \u2013 Downtown Los Angeles Office:"},
-      {y:"",t:"Former Senior Legal Counsel at this DTLA location. This pin represents the downtown LA office where Dushkes was employed."},
-      {y:"",t:"SHEILA M. TEMPLETON \u2013 San Diego Office:"},
-      {y:"",t:"Associate in the Appellate Law (Strategy, Writs, & Appeals) team at the San Diego office (not this DTLA location). B.A. and J.D. from University of San Francisco. Public Interest Law Certificate with honors. CALI award in First Amendment law. Co-president, Women\u2019s Law Association. Judicial extern, U.S. District Court, Hon. Maria-Elena James, Northern District of California."},
-      {y:"",t:"Prior experience at plaintiff and defense firms in San Diego and Los Angeles. Member, Hon. J. Clifford Wallace Inn of Court, San Diego."},
-      {y:"",t:"Family member of Cheryl Templeton per filed Notice of Ethical Conflict (sister per human authority, 30\u201340 year age gap)."},
-      {y:"",t:"RECRUITMENT PATHWAY:"},
-      {y:"",t:"Dushkes held senior position at Manning & Kass (DTLA). Sheila Templeton is currently employed at Manning & Kass (San Diego). Dushkes now serves as attorney for respondent Cheryl Templeton in 25STPB09444."},
-      {y:"",t:"\u26a0 This pin marks the DTLA office only. Sheila M. Templeton works at the firm\u2019s San Diego office, which is outside this map\u2019s coverage area."}
+      {y:"",t:"__DRAWER_LARRY__"},
+      {y:"",t:"__DRAWER_SHEILA__"},
+      {y:"",t:"__DRAWER_CONFRONTATION__"},
+      {y:"",t:"\u26a0 This pin marks the DTLA office only. Sheila M. Templeton works at the firm\u2019s San Diego office (225 Broadway, Unit 2000, San Diego, CA 92101), which is outside this map\u2019s coverage area."}
     ],
+    drawers:{
+      larry:{title:"Larry S. Dushkes \u2013 DTLA Office",body:"Former Senior Legal Counsel at Manning & Kass, 801 S. Figueroa St, 15th Floor, Downtown Los Angeles. This pin represents the DTLA office where Dushkes was employed before entering private practice and becoming attorney for respondent Cheryl Templeton in 25STPB09444."},
+      sheila:{title:"Sheila M. Templeton \u2013 San Diego Office",body:"Associate in the Appellate Law (Strategy, Writs, & Appeals) team at the San Diego office (225 Broadway, Unit 2000). B.A. and J.D. from University of San Francisco. Public Interest Law Certificate with honors. CALI award in First Amendment law. Co-president, Women\u2019s Law Association. Judicial extern, U.S. District Court, Hon. Maria-Elena James, Northern District of California. Prior experience at plaintiff and defense firms in San Diego and Los Angeles. Member, Hon. J. Clifford Wallace Inn of Court, San Diego. <br><br>Family member of Cheryl Templeton per filed Notice of Ethical Conflict (sister per human authority, 30\u201340 year age gap)."},
+      confrontation:{title:"Formal Notification & Response \u2013 March 13, 2026",body:"__TIMELINE__"}
+    },
     conns:["dushkes","templeton-current"]
   },
   {
@@ -977,6 +1004,28 @@ function renderRadius(){
 }
 
 /* ===== PROFILE ===== */
+function renderDrawer(d){
+  return '<div class="drawer"><button class="drawer-toggle" onclick="toggleDrawer(this)">'+d.title+' <span class="arrow">\u25B6</span></button><div class="drawer-body"><p>'+d.body+'</p></div></div>';
+}
+
+function renderConfrontationDrawer(){
+  return '<div class="drawer"><button class="drawer-toggle" onclick="toggleDrawer(this)" style="color:var(--accent-red)">'+
+    '\u26a0 Formal Notification & Response \u2013 March 13, 2026 <span class="arrow">\u25B6</span></button>'+
+    '<div class="drawer-body">'+
+    '<p style="font-weight:600;color:rgba(255,255,255,0.9);margin-bottom:10px">The Manning & Kass / Sheila Templeton connection was formally brought to Larry Dushkes\u2019s attention on Friday, March 13, 2026. He has never denied it.</p>'+
+    '<div class="timeline-item"><span class="tdate">9:02 AM \u2013 Email from Kaylen Bingham</span><br>Subject: \u201cURGENT: FORMAL SERVICE OF NOTICE OF ETHICAL CONFLICT...\u201d<br>Stated: \u201cThe Manning Kass \u2018sister-firm\u2019 nexus involving Sheila M. Templeton is now documented.\u201d</div>'+
+    '<div class="timeline-item"><span class="tdate">10:32 AM PT \u2013 Formal Electronic Service via One Legal</span><br>\u201cNOTICE OF ETHICAL CONFLICT AND PENDING FORENSIC DISCOVERY RE: MANNING KASS REFERRAL NEXUS\u201d transmitted to larry.dushkes@dushkeslaw.com.<br>The Notice stated: \u201cWe have noted the professional overlap involving your former tenure as Senior Counsel at Manning & Kass\u2019s Los Angeles office and the concurrent role of the Successor Trustee\u2019s sister, Sheila M. Templeton, within that firm\u2019s San Diego appellate division.\u201d<br>Deadline given: Monday at 5:00 PM to confirm disclosure to Court.</div>'+
+    '<div class="timeline-item"><span class="tdate">8:03 PM \u2013 Dushkes Response</span><br>Completely ignored the Manning & Kass / Sheila Templeton allegations. Stated only: \u201cI remain Cheryl Templeton\u2019s attorney of record. If you believe there are grounds for my disqualification, you are free to ask the court to disqualify me.\u201d</div>'+
+    '<div class="unrebutted">\u26a0 UNREBUTTED: In all subsequent communications\u2014including emails on March 16 and beyond\u2014Dushkes has maintained absolute silence on this allegation. He has issued no defense, no correction, and no statement denying that Sheila Templeton is Cheryl Templeton\u2019s sister or that she works at his former firm.</div>'+
+    '</div></div>';
+}
+
+function toggleDrawer(btn){
+  btn.classList.toggle('open');
+  var body=btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
 function openProfile(id){
   activePin=id;
   const pin=pinById[id];
@@ -994,7 +1043,17 @@ function openProfile(id){
   }
   if(pin.events && pin.events.length){
     html+=`<div class="profile-section"><h3>Notable Events</h3>`;
-    pin.events.forEach(e=>{html+=`<div class="profile-event">${e.y?`<span class="year">${e.y}</span>`:""}${e.t}</div>`});
+    pin.events.forEach(e=>{
+      if(e.t==="__DRAWER_LARRY__" && pin.drawers && pin.drawers.larry){
+        html+=renderDrawer(pin.drawers.larry);
+      } else if(e.t==="__DRAWER_SHEILA__" && pin.drawers && pin.drawers.sheila){
+        html+=renderDrawer(pin.drawers.sheila);
+      } else if(e.t==="__DRAWER_CONFRONTATION__" && pin.drawers && pin.drawers.confrontation){
+        html+=renderConfrontationDrawer();
+      } else {
+        html+=`<div class="profile-event">${e.y?`<span class="year">${e.y}</span>`:""}${e.t}</div>`;
+      }
+    });
     html+=`</div>`;
   }
   if(pin.conns && pin.conns.length){
