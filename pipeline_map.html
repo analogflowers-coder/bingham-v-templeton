@@ -685,13 +685,22 @@ const PINS = [
   /* Coarsegold removed - Northern CA, not on LA map */
   {
     id:"manning-kass",name:"Manning & Kass Ellrod Ramirez Trester LLP",lat:34.0516,lng:-118.2607,
-    addr:"801 South Figueroa St 15th Floor, Los Angeles 90017",
+    addr:"801 South Figueroa St, 15th Floor, Los Angeles, CA 90017",
     role:"Dushkes Former Employer / Sheila Templeton Current Employer",cat:"other",year:2000,
-    stats:[],
+    stats:[
+      ["DTLA Office","801 S. Figueroa St, 15th Fl, Los Angeles 90017"],
+      ["San Diego Office","Sheila M. Templeton\u2019s current location"]
+    ],
     events:[
-      {y:"",t:"Sheila Templeton: appellate associate (family member, 30\u201340 year age gap)"},
-      {y:"",t:"Dushkes: former Senior Legal Counsel"},
-      {y:"",t:"Recruitment pathway between firms"}
+      {y:"",t:"LARRY S. DUSHKES \u2013 Downtown Los Angeles Office:"},
+      {y:"",t:"Former Senior Legal Counsel at this DTLA location. This pin represents the downtown LA office where Dushkes was employed."},
+      {y:"",t:"SHEILA M. TEMPLETON \u2013 San Diego Office:"},
+      {y:"",t:"Associate in the Appellate Law (Strategy, Writs, & Appeals) team at the San Diego office (not this DTLA location). B.A. and J.D. from University of San Francisco. Public Interest Law Certificate with honors. CALI award in First Amendment law. Co-president, Women\u2019s Law Association. Judicial extern, U.S. District Court, Hon. Maria-Elena James, Northern District of California."},
+      {y:"",t:"Prior experience at plaintiff and defense firms in San Diego and Los Angeles. Member, Hon. J. Clifford Wallace Inn of Court, San Diego."},
+      {y:"",t:"Family member of Cheryl Templeton per filed Notice of Ethical Conflict (sister per human authority, 30\u201340 year age gap)."},
+      {y:"",t:"RECRUITMENT PATHWAY:"},
+      {y:"",t:"Dushkes held senior position at Manning & Kass (DTLA). Sheila Templeton is currently employed at Manning & Kass (San Diego). Dushkes now serves as attorney for respondent Cheryl Templeton in 25STPB09444."},
+      {y:"",t:"\u26a0 This pin marks the DTLA office only. Sheila M. Templeton works at the firm\u2019s San Diego office, which is outside this map\u2019s coverage area."}
     ],
     conns:["dushkes","templeton-current"]
   },
