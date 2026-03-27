@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEMPLETON NETWORK | ACTIVE CASE MONITOR</title>
+<style>
+:root {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.12);
+  --text-primary: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-tertiary: #aeaeb2;
+  --accent: #0071e3;
+  --green: #34c759;
+  --red: #ff3b30;
+  --orange: #ff9500;
+  --yellow: #ffcc00;
+  --blue: #007aff;
+  --navy: #1d1d1f;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+body { font-family: var(--font); background: var(--bg); color: var(--text-primary); line-height: 1.47; }
+
+.title-bar {
+  background: var(--navy); padding: 20px 32px; text-align: center;
+}
+.title-bar h1 {
+  color: #fff; font-size: 13px; font-weight: 600;
+  letter-spacing: 2.5px; text-transform: uppercase; opacity: 0.95;
+}
+.title-bar .subtitle {
+  color: rgba(255,255,255,0.45); font-size: 11px; font-weight: 400;
+  letter-spacing: 1.8px; margin-top: 4px;
+}
+
+.toolbar {
+  background: rgba(255,255,255,0.85); border-bottom: 1px solid var(--border);
+  padding: 10px 16px; display: flex; align-items: center; justify-content: center;
+  gap: 8px; flex-wrap: wrap; position: sticky; top: 0; z-index: 90;
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+}
+.search-box {
+  appearance: none; -webkit-appearance: none;
+  background: rgba(0,0,0,0.04); border: none; border-radius: var(--radius-sm);
+  padding: 8px 14px 8px 36px; font-family: var(--font); font-size: 13px;
+  color: var(--text-primary); width: 320px; transition: all var(--transition);
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23aeaeb2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: 10px center;
+}
+.search-box:focus { outline: none; background-color: rgba(0,0,0,0.06); box-shadow: 0 0 0 2px rgba(0,113,227,0.3); }
+.search-box::placeholder { color: var(--text-tertiary); }
+
+.toolbar-divider { width: 1px; height: 20px; background: var(--border-strong); margin: 0 4px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font); font-size: 11px; font-weight: 500;
+  border: none; border-radius: 100px; padding: 6px 12px; cursor: pointer;
+  transition: all var(--transition); -webkit-user-select: none; user-select: none;
+  white-space: nowrap;
+}
+.btn:active { transform: scale(0.97); }
+.btn-pill { background: rgba(0,0,0,0.04); color: var(--text-secondary); }
+.btn-pill:hover { background: rgba(0,0,0,0.08); color: var(--text-primary); }
+.btn-pill.active { background: var(--navy); color: #fff; }
+.btn-accent {
+  background: var(--accent); color: #fff; padding: 6px 14px;
+}
+.btn-accent:hover { background: #0077ED; }
+
+.stats-bar {
+  padding: 12px 24px; display: flex; align-items: center; gap: 16px;
+  border-bottom: 1px solid var(--border); background: var(--surface); flex-wrap: wrap;
+}
+.stat-chip {
+  font-size: 12px; color: var(--text-secondary); font-weight: 500;
+  display: flex; align-items: center; gap: 6px;
+}
+.stat-chip .num { font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.stat-chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+.last-updated {
+  margin-left: auto; font-size: 11px; color: var(--text-tertiary);
+  cursor: pointer; display: flex; align-items: center; gap: 4px;
+}
+.last-updated:hover { color: var(--text-secondary); }
+.last-updated input {
+  font-family: var(--font); font-size: 11px; color: var(--text-secondary);
+  background: rgba(0,0,0,0.04); border: none; border-radius: 4px;
+  padding: 2px 6px; width: 140px;
+}
+
+/* Alerts */
+.alerts-banner {
+  background: linear-gradient(135deg, #fff5f5 0%, #fff0f0 100%);
+  border-bottom: 1px solid rgba(255,59,48,0.12);
+  padding: 14px 24px; display: none;
+}
+.alerts-banner.visible { display: block; }
+.alerts-title {
+  font-size: 11px; font-weight: 700; color: var(--red);
+  letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.alerts-title svg { width: 14px; height: 14px; }
+.alert-item {
+  font-size: 12px; color: var(--text-primary); padding: 3px 0;
+  display: flex; align-items: center; gap: 8px;
+}
+.alert-item .alert-case { font-weight: 600; font-variant-numeric: tabular-nums; }
+.alert-item .alert-date { color: var(--red); font-weight: 600; }
+
+/* Category filters */
+.cat-filters { display: flex; gap: 6px; }
+.cat-dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 2px; display: inline-block; vertical-align: middle; }
+
+/* Table */
+.table-container { padding: 0 16px 16px; }
+table { width: 100%; border-collapse: collapse; margin-top: 0; }
+thead th {
+  padding: 10px 12px; text-align: left; font-size: 11px;
+  font-weight: 600; color: var(--text-tertiary); letter-spacing: 0.8px;
+  text-transform: uppercase; border-bottom: 1px solid var(--border-strong);
+  position: sticky; top: 52px; background: var(--bg); z-index: 5;
+}
+tbody tr {
+  cursor: pointer; transition: background var(--transition);
+}
+tbody tr:hover { background: rgba(0,0,0,0.02); }
+tbody tr.expanded { background: rgba(0,113,227,0.03); }
+td {
+  padding: 10px 12px; font-size: 13px; border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.case-num-cell { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.cat-tag {
+  display: inline-block; padding: 2px 8px; border-radius: 100px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.5px;
+  text-transform: uppercase; white-space: nowrap;
+}
+.cat-red { background: rgba(255,59,48,0.1); color: #d32f2f; }
+.cat-orange { background: rgba(255,149,0,0.1); color: #e65100; }
+.cat-blue { background: rgba(0,122,255,0.1); color: #1565c0; }
+.cat-gray { background: rgba(0,0,0,0.06); color: #6e6e73; }
+
+.hearing-cell { white-space: nowrap; }
+.hearing-urgent { color: var(--red); font-weight: 600; }
+.hearing-soon { color: #b8860b; font-weight: 500; }
+.pending-text { color: var(--text-tertiary); font-style: italic; font-weight: 400; }
+
+.status-cell { font-size: 12px; }
+.status-active { color: var(--green); font-weight: 500; }
+.status-pending { color: var(--orange); font-weight: 500; }
+.status-dormant { color: var(--text-tertiary); }
+
+/* Expanded row */
+.detail-row { display: none; }
+.detail-row.visible { display: table-row; }
+.detail-row td {
+  padding: 0 12px 16px 12px; border-bottom: 1px solid var(--border-strong);
+  background: rgba(0,113,227,0.02);
+}
+.detail-card {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+  padding: 16px; background: var(--surface); border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+}
+.detail-group h4 {
+  font-size: 10px; font-weight: 700; color: var(--text-tertiary);
+  letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;
+}
+.detail-group p { font-size: 12px; color: var(--text-primary); line-height: 1.6; }
+.detail-group p span.label { color: var(--text-secondary); }
+
+/* Edit mode */
+.edit-btn {
+  background: none; border: 1px solid var(--border-strong); border-radius: 6px;
+  padding: 4px 10px; font-size: 11px; font-family: var(--font);
+  color: var(--text-secondary); cursor: pointer; transition: all var(--transition);
+}
+.edit-btn:hover { background: rgba(0,0,0,0.04); color: var(--text-primary); }
+.edit-input {
+  font-family: var(--font); font-size: 12px; color: var(--text-primary);
+  background: rgba(0,0,0,0.03); border: 1px solid rgba(0,113,227,0.3);
+  border-radius: 6px; padding: 4px 8px; width: 100%;
+  transition: all var(--transition);
+}
+.edit-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0,113,227,0.15); }
+.save-btn {
+  background: var(--accent); color: #fff; border: none; border-radius: 6px;
+  padding: 4px 12px; font-size: 11px; font-family: var(--font);
+  cursor: pointer; margin-top: 6px;
+}
+.save-btn:hover { background: #0077ED; }
+
+/* Footer */
+.footer {
+  padding: 20px 24px; text-align: center; border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+.footer p { font-size: 11px; color: var(--text-tertiary); font-weight: 500; letter-spacing: 0.3px; line-height: 1.6; }
+
+/* Legend */
+.legend {
+  padding: 12px 24px; display: flex; gap: 16px; flex-wrap: wrap;
+  border-bottom: 1px solid var(--border); background: var(--surface);
+}
+.legend-item { font-size: 11px; color: var(--text-secondary); display: flex; align-items: center; gap: 5px; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+
+/* Print */
+@media print {
+  .toolbar, .alerts-banner, .edit-btn, .save-btn { display: none !important; }
+  .title-bar { background: #fff; }
+  .title-bar h1, .title-bar .subtitle { color: #1d1d1f; }
+  .footer { border-top: 1px solid #ccc; }
+  thead th { position: static; }
+  tbody tr { break-inside: avoid; }
+  .detail-row.visible { display: table-row; }
+  @page { size: landscape; margin: 0.4in; }
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.table-container { animation: fadeIn 0.4s ease; }
+</style>
+</head>
+<body>
+
+<div class="title-bar">
+  <h1>Templeton Network &#160;&#183;&#160; Active Case Monitor</h1>
+  <div class="subtitle">LASC 25STPB09444 &#160;|&#160; Bradley Bingham, Petitioner, In Propria Persona</div>
+</div>
+
+<div class="toolbar">
+  <input type="text" class="search-box" id="searchBox" placeholder="Search cases, parties, attorneys..." oninput="filterCases()">
+  <div class="toolbar-divider"></div>
+  <div class="cat-filters">
+    <button class="btn btn-pill active" data-cat="all" onclick="filterByCat('all',this)">All</button>
+    <button class="btn btn-pill" data-cat="red" onclick="filterByCat('red',this)"><span class="cat-dot" style="background:#ff3b30"></span>T+D</button>
+    <button class="btn btn-pill" data-cat="orange" onclick="filterByCat('orange',this)"><span class="cat-dot" style="background:#ff9500"></span>Dushkes</button>
+    <button class="btn btn-pill" data-cat="blue" onclick="filterByCat('blue',this)"><span class="cat-dot" style="background:#007aff"></span>T+Other</button>
+    <button class="btn btn-pill" data-cat="gray" onclick="filterByCat('gray',this)"><span class="cat-dot" style="background:#aeaeb2"></span>Unrep</button>
+  </div>
+  <div class="toolbar-divider"></div>
+  <button class="btn btn-accent" onclick="window.print()">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px"><path d="M4 5V1h8v4"/><rect x="2" y="5" width="12" height="6" rx="1"/><path d="M4 11v4h8v-4"/></svg>
+    Print
+  </button>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-chip"><span class="num" id="totalCount">31</span> Total Cases</div>
+  <div class="stat-chip"><span class="dot" style="background:#ff3b30"></span><span class="num" id="redCount">4</span> Templeton + Dushkes</div>
+  <div class="stat-chip"><span class="dot" style="background:#ff9500"></span><span class="num" id="orangeCount">6</span> Dushkes Only</div>
+  <div class="stat-chip"><span class="dot" style="background:#007aff"></span><span class="num" id="blueCount">20</span> Templeton + Other</div>
+  <div class="stat-chip"><span class="dot" style="background:#aeaeb2"></span><span class="num" id="grayCount">1</span> Unrepresented</div>
+  <div class="last-updated" id="lastUpdated" onclick="editTimestamp()">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+    Updated: <span id="timestampText">March 18, 2026</span>
+  </div>
+</div>
+
+<div class="alerts-banner" id="alertsBanner">
+  <div class="alerts-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    Priority Alerts &#8212; Hearings Within 30 Days
+  </div>
+  <div id="alertsList"></div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="cat-dot" style="background:#ff3b30"></span> Templeton + Dushkes</div>
+  <div class="legend-item"><span class="cat-dot" style="background:#ff9500"></span> Dushkes Only</div>
+  <div class="legend-item"><span class="cat-dot" style="background:#007aff"></span> Templeton + Other Attorney</div>
+  <div class="legend-item"><span class="cat-dot" style="background:#aeaeb2"></span> Templeton Unrepresented</div>
+  <div class="legend-item" style="margin-left:auto"><span style="display:inline-block;width:10px;height:10px;background:rgba(255,59,48,0.12);border:1px solid #ff3b30;border-radius:2px;margin-right:3px"></span> &lt;30 days</div>
+  <div class="legend-item"><span style="display:inline-block;width:10px;height:10px;background:rgba(255,204,0,0.15);border:1px solid #b8860b;border-radius:2px;margin-right:3px"></span> &lt;60 days</div>
+</div>
+
+<div class="table-container">
+<table>
+<thead>
+  <tr>
+    <th style="width:110px">Case No.</th>
+    <th>Title</th>
+    <th style="width:90px">Category</th>
+    <th style="width:180px">Next Hearing</th>
+    <th style="width:160px">Status</th>
+    <th style="width:50px"></th>
+  </tr>
+</thead>
+<tbody id="caseTableBody"></tbody>
+</table>
+</div>
+
+<div class="footer">
+  <p>Data verified as of March 18, 2026. Fields marked 'Pending update' require manual refresh from LASC Case Access Portal.</p>
+</div>
+
+<script>
+var cases = [
+  {id:"25STPB09444",title:"Flora Bingham Living Trust",cat:"red",catLabel:"T+D",
+   role:"Templeton is Successor Trustee. Dushkes is Attorney for Respondent.",
+   attorneys:"Larry S. Dushkes (Attorney for Respondent)",
+   parties:"Cheryl Templeton (Successor Trustee/Respondent), Bradley Bingham (Petitioner), Eric Bingham (Interested Party)",
+   lastFiling:"March 18, 2026 (Clerk\u2019s Certificate \u2013 Proof of Electronic Service)",
+   nextHearing:"May 7, 2026 1:30 PM Dept 79 (Evidentiary Hearing)",nextDate:"2026-05-07",
+   secondHearing:"September 23, 2026 1:30 PM Dept 79 (Motion to Disqualify)",
+   status:"Open / Active Trial Litigation / Asset Freeze Active",statusType:"active"},
+
+  {id:"24STPB00244",title:"Estate of Magdalena Janina Van Buren",cat:"red",catLabel:"T+D",
+   role:"Templeton is Petitioner. Dushkes is Attorney for Petitioner.",
+   attorneys:"Larry S. Dushkes (Attorney for Petitioner)",
+   parties:"Cheryl Templeton (Petitioner)",
+   lastFiling:"October 18, 2024 (Notice of Hearing on First and Final Account; Consent to Electronic Service)",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Pending Final Discharge",statusType:"pending"},
+
+  {id:"20STPB10379",title:"Eddie Hollins Trust",cat:"red",catLabel:"T+D",
+   role:"Templeton is Petitioner/Interested Party. Dushkes is Attorney for Interested Party.",
+   attorneys:"Larry S. Dushkes (Attorney for Interested Party)",
+   parties:"Cheryl Templeton (Petitioner/Interested Party)",
+   lastFiling:"February 20, 2026 (Minute Order/Conference Hearing). Substitution of Attorney filed February 18, 2026.",
+   nextHearing:"March 27, 2026 8:30 AM Dept 64 (Status Hearing)",nextDate:"2026-03-27",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"26STCV05204",title:"Dale Smith v. Cheryl Templeton & Todd Lozon",cat:"red",catLabel:"T+D",
+   role:"Dushkes is Attorney for Plaintiff (suing his own client Templeton who is Defendant)",
+   attorneys:"Larry S. Dushkes (Attorney for Plaintiff Dale Smith)",
+   parties:"Dale Smith (Plaintiff), Cheryl Templeton (Defendant), Todd Lozon (Defendant)",
+   lastFiling:"February 19, 2026 (Notice of Case Management Conference; Clerk\u2019s Certificate of Service)",
+   nextHearing:"December 15, 2026 8:30 AM Dept 14 (Case Management Conference)",nextDate:"2026-12-15",
+   secondHearing:"",
+   status:"Open / Active Civil Litigation",statusType:"active"},
+
+  {id:"17STPB03408",title:"Estate of Turki Bin Abdulaziz",cat:"orange",catLabel:"Dushkes",
+   role:"Dushkes is Attorney for Interested Party",
+   attorneys:"Larry S. Dushkes (Attorney for Interested Party)",
+   parties:"Not specified in docket extraction",
+   lastFiling:"March 10, 2026 (Status Report Hearing Held)",
+   nextHearing:"January 6, 2027 8:32 AM Dept 5 (OSC Re Petition for Final Distribution or Status Report)",nextDate:"2027-01-06",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"21STPB11565",title:"Conservatorship of Muriel Burger",cat:"orange",catLabel:"Dushkes",
+   role:"Dushkes is both Petitioner and Attorney for Petitioner",
+   attorneys:"Larry S. Dushkes (Petitioner/Attorney for Petitioner)",
+   parties:"Muriel Burger (Conservatee, deceased)",
+   lastFiling:"December 20, 2023 (Order). Notice of Death of Conservatee filed February 14, 2023.",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Pending Final Discharge",statusType:"pending"},
+
+  {id:"22STPB01462",title:"Estate of Peter Chhun",cat:"orange",catLabel:"Dushkes",
+   role:"Dushkes is Co-Personal Representative and Attorney for Petitioner",
+   attorneys:"Larry S. Dushkes (Co-Personal Representative/Attorney for Petitioner)",
+   parties:"Not specified in docket extraction",
+   lastFiling:"March 2, 2026 (Miscellaneous Document \u2013 Spousal Property Election)",
+   nextHearing:"March 23, 2026 8:32 AM Dept 11 (Accounting Hearing)",nextDate:"2026-03-23",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"23STPB06059",title:"Estate of Eric Nakamura",cat:"orange",catLabel:"Dushkes",
+   role:"Dushkes is Creditor",
+   attorneys:"Larry S. Dushkes (Creditor)",
+   parties:"Not specified in docket extraction",
+   lastFiling:"February 21, 2025 (Status Report Hearing Held / Minute Order)",
+   nextHearing:"March 26, 2026 8:32 AM Dept 44 (OSC Re Petition for Final Distribution or Status Report)",nextDate:"2026-03-26",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"25STPB01615",title:"Estate of Shaun Michael Baden",cat:"orange",catLabel:"Dushkes",
+   role:"Dushkes is Attorney for Creditor (HDR Investment Company)",
+   attorneys:"Larry S. Dushkes (Attorney for Creditor \u2013 HDR Investment Company)",
+   parties:"HDR Investment Company (Creditor)",
+   lastFiling:"February 19, 2026 (Ex Parte Order and Clerk\u2019s Certificate \u2013 Proof of Electronic Service)",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"BP168417",title:"Conservatorship of Ellen Frenkel",cat:"orange",catLabel:"Dushkes",
+   role:"Dushkes is PVP Attorney/Attorney for Objector (ROA entry 2/18/2016 designates \u201cPVP Attorney\u201d)",
+   attorneys:"Larry S. Dushkes (PVP Attorney/Attorney for Objector)",
+   parties:"Ellen Frenkel (Conservatee)",
+   lastFiling:"November 14, 2024 (Substitution of Attorney)",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"17STPB02585",title:"Conservatorship of David Michael Valentine",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Petitioner/Conservator",
+   attorneys:"Marissa Garcia, Howard Gold",
+   parties:"Cheryl Templeton (Petitioner/Conservator), David Michael Valentine (Conservatee)",
+   lastFiling:"August 26, 2024 (Notice \u2013 Hearing)",
+   nextHearing:"September 28, 2026 8:32 AM Dept 99 (Order to Show Cause Hearing)",nextDate:"2026-09-28",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"20STPB09017",title:"Meo-Croyle Trust",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Petitioner/Trustee",
+   attorneys:"Marissa Garcia, Marilyn S. Seltzer",
+   parties:"Cheryl Templeton (Petitioner/Trustee)",
+   lastFiling:"February 11, 2026 (Application/Order \u2013 Appointing Probate Referee)",
+   nextHearing:"April 30, 2026 Dept 79",nextDate:"2026-04-30",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"16STPB04698",title:"Meo-Croyle Conservatorship",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Petitioner",
+   attorneys:"Marilyn S. Seltzer, Marissa Garcia",
+   parties:"Cheryl Templeton (Petitioner)",
+   lastFiling:"December 26, 2025 (Notice \u2013 Death)",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Pending Final Discharge following conservatee death",statusType:"pending"},
+
+  {id:"16STPB03003",title:"Maksim Gruninger Trust",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Party",
+   attorneys:"Marissa Garcia, Howard Gold",
+   parties:"Cheryl Templeton (Party)",
+   lastFiling:"January 26, 2026 (Multiple Minute Orders & Reply to Opposition)",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"18STPB01966",title:"Julien Michael Jerry Trust",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Successor Trustee",
+   attorneys:"Marissa Garcia",
+   parties:"Cheryl Templeton (Successor Trustee)",
+   lastFiling:"January 22, 2026 (Accounting Hearing Held, Minute Order, Proof of Electronic Service)",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"18STPB07404",title:"Conservatorship of June Zempleny",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Conservator",
+   attorneys:"Stephen Snow",
+   parties:"Cheryl Templeton (Conservator), June Zempleny (Conservatee)",
+   lastFiling:"November 24, 2025 (Order Approving Fourth Account Current)",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"21STPB01179",title:"Conservatorship of Charlotte Zelda Sherman",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Temp Conservator/Successor Trustee",
+   attorneys:"Shabnam Broomer, Marissa Garcia",
+   parties:"Cheryl Templeton (Temp Conservator/Successor Trustee), Charlotte Zelda Sherman (Conservatee)",
+   lastFiling:"March 13, 2026 (Notice \u2013 Hearing)",
+   nextHearing:"April 21, 2026 8:30 AM Dept 4 (OSC Hearing)",nextDate:"2026-04-21",
+   secondHearing:"May 14, 2026 8:30 AM Dept 4 (Accounting Hearing)",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"21STPB02110",title:"Maribel Zarate Trust",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Petitioner",
+   attorneys:"Marissa Garcia",
+   parties:"Cheryl Templeton (Petitioner)",
+   lastFiling:"November 14, 2024 (Notice \u2013 Change of Address/Firm Name)",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Active (Second Account Current approved 8/23/2024)",statusType:"active"},
+
+  {id:"21STPB07050",title:"Estate of Steven L. Grad",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Petitioner",
+   attorneys:"Doron M. Tisser",
+   parties:"Cheryl Templeton (Petitioner)",
+   lastFiling:"January 7, 2025 (Status Report Hearing Held)",
+   nextHearing:"December 1, 2026 8:30 AM Dept 2D (OSC Re Petition for Final Distribution or Status Report)",nextDate:"2026-12-01",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"23STPB11074",title:"Thelma Armstrong Trust",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Successor Trustee",
+   attorneys:"Yevgeny Belous",
+   parties:"Cheryl Templeton (Successor Trustee)",
+   lastFiling:"July 10, 2024 (Accounting Hearing Continued / Minute Order)",
+   nextHearing:"April 30, 2025 8:30 AM Dept 5 (Accounting Hearing)",nextDate:"2025-04-30",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"23STPB13783",title:"Estate of Kalliopi Newman",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Petitioner",
+   attorneys:"Lynda Imgyung Chung",
+   parties:"Cheryl Templeton (Petitioner)",
+   lastFiling:"Pending update",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"24STPB11397",title:"Estate of Dennis Glen Avina",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Petitioner",
+   attorneys:"Richard Ross Jacinto",
+   parties:"Cheryl Templeton (Petitioner)",
+   lastFiling:"November 26, 2025 (Supplement First and Final Account / Satisfaction of Creditor\u2019s Claim)",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"24STPB12384",title:"Estate of Linda Lee Lozon",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Petitioner",
+   attorneys:"Rennee Dehesa, Marissa Garcia",
+   parties:"Cheryl Templeton (Petitioner)",
+   lastFiling:"November 25, 2025 (Final Inventory & Appraisal)",
+   nextHearing:"September 17, 2026 8:30 AM Dept 62 (OSC Re Petition for Final Distribution or Status Report)",nextDate:"2026-09-17",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"25STPB10510",title:"Estate of Jennifer Garner",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Petitioner",
+   attorneys:"Lynda Chung, Matthew Yu",
+   parties:"Cheryl Templeton (Petitioner)",
+   lastFiling:"Pending update",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"25STPB10890",title:"The Julien Trust",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Trustee/Objector",
+   attorneys:"Marissa Garcia",
+   parties:"Cheryl Templeton (Trustee/Objector)",
+   lastFiling:"March 18, 2026 (Ex Parte \u2013 Order). March 13, 2026 Ex Parte Petition to restrict Templeton from using Trust funds to finance opposition.",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"BP148105",title:"Conservatorship of Zane C. Perdew",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Petitioner",
+   attorneys:"Marissa Garcia, Howard Gold",
+   parties:"Cheryl Templeton (Petitioner), Zane C. Perdew (Conservatee)",
+   lastFiling:"March 24, 2025 (Court Order Hearing Held)",
+   nextHearing:"May 22, 2026 8:32 AM Dept 62 (Order to Show Cause Hearing)",nextDate:"2026-05-22",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"BP149265",title:"Luella Perdew Trust",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Petitioner",
+   attorneys:"Marissa Garcia",
+   parties:"Cheryl Templeton (Petitioner)",
+   lastFiling:"May 30, 2025 (Accounting & Petition Hearings Held / Petition Granted)",
+   nextHearing:"April 30, 2027 8:30 AM Dept 62 (Order to Show Cause Hearing)",nextDate:"2027-04-30",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"BP149971",title:"Chase Thomas Dittfeld Trust",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Petitioner",
+   attorneys:"Marlene S. Seltzer",
+   parties:"Cheryl Templeton (Petitioner)",
+   lastFiling:"March 10, 2020 (Receipt)",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Dormant post-approval",statusType:"dormant"},
+
+  {id:"BP150274",title:"Conservatorship of Betty M. Caruthers",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Conservator",
+   attorneys:"Marlene S. Seltzer, Howard Gold",
+   parties:"Cheryl Templeton (Conservator), Betty M. Caruthers (Conservatee)",
+   lastFiling:"April 26, 2024 (Minute Order)",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"BP163277",title:"Caruthers-King Living Trust",cat:"blue",catLabel:"T+Other",
+   role:"Templeton is Petitioner",
+   attorneys:"Marlene S. Seltzer, Howard Gold",
+   parties:"Cheryl Templeton (Petitioner)",
+   lastFiling:"April 26, 2024 (Petition Granted / Minute Order)",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Active",statusType:"active"},
+
+  {id:"LC050848",title:"Country Villa South Bay v. Cheryl Templeton",cat:"gray",catLabel:"Unrep",
+   role:"Templeton is Defendant. No attorney of record.",
+   attorneys:"None (Unrepresented)",
+   parties:"Country Villa South Bay (Plaintiff), Cheryl Templeton (Defendant)",
+   lastFiling:"Pending update",
+   nextHearing:"Pending update",nextDate:"",
+   secondHearing:"",
+   status:"Open / Pending (Van Nuys Courthouse East, Commercial/Business Tort)",statusType:"pending"}
+];
+
+var edits = {};
+var activeCat = "all";
+var expandedRow = null;
+
+function getRefDate() {
+  return new Date(2026, 2, 18);
+}
+
+function daysBetween(dateStr) {
+  if (!dateStr) return Infinity;
+  var d = new Date(dateStr);
+  var ref = getRefDate();
+  return Math.ceil((d - ref) / (1000*60*60*24));
+}
+
+function hearingClass(dateStr) {
+  var days = daysBetween(dateStr);
+  if (days <= 30 && days >= 0) return "hearing-urgent";
+  if (days <= 60 && days >= 0) return "hearing-soon";
+  return "";
+}
+
+function statusClass(type) {
+  if (type === "active") return "status-active";
+  if (type === "pending") return "status-pending";
+  if (type === "dormant") return "status-dormant";
+  return "";
+}
+
+function catClass(cat) {
+  return "cat-" + cat;
+}
+
+function getVal(c, field) {
+  var key = c.id + "_" + field;
+  return edits[key] !== undefined ? edits[key] : c[field];
+}
+
+function buildAlerts() {
+  var banner = document.getElementById("alertsBanner");
+  var list = document.getElementById("alertsList");
+  list.innerHTML = "";
+  var hasAlerts = false;
+  cases.forEach(function(c) {
+    var days = daysBetween(c.nextDate);
+    if (days >= 0 && days <= 30) {
+      hasAlerts = true;
+      var div = document.createElement("div");
+      div.className = "alert-item";
+      div.innerHTML = '<span class="alert-case">' + c.id + '</span> ' +
+        c.title + ' &mdash; <span class="alert-date">' + getVal(c,"nextHearing") + '</span>';
+      list.appendChild(div);
+    }
+  });
+  banner.classList.toggle("visible", hasAlerts);
+}
+
+function renderTable() {
+  var tbody = document.getElementById("caseTableBody");
+  tbody.innerHTML = "";
+  var query = document.getElementById("searchBox").value.toLowerCase();
+  var visibleCounts = {red:0,orange:0,blue:0,gray:0,total:0};
+
+  cases.forEach(function(c, idx) {
+    if (activeCat !== "all" && c.cat !== activeCat) return;
+    var searchStr = (c.id + " " + c.title + " " + c.attorneys + " " + c.parties + " " + c.role).toLowerCase();
+    if (query && searchStr.indexOf(query) === -1) return;
+
+    visibleCounts[c.cat]++;
+    visibleCounts.total++;
+
+    var hClass = hearingClass(c.nextDate);
+    var hearingText = getVal(c, "nextHearing");
+    var isPending = hearingText === "Pending update";
+    var sClass = statusClass(c.statusType);
+    var statusText = getVal(c, "status");
+
+    var tr = document.createElement("tr");
+    tr.setAttribute("data-idx", idx);
+    tr.onclick = function(e) { if (e.target.tagName !== "BUTTON" && e.target.tagName !== "INPUT") toggleExpand(idx); };
+
+    tr.innerHTML =
+      '<td class="case-num-cell">' + c.id + '</td>' +
+      '<td>' + c.title + '</td>' +
+      '<td><span class="cat-tag ' + catClass(c.cat) + '">' + c.catLabel + '</span></td>' +
+      '<td class="hearing-cell ' + (isPending ? '' : hClass) + '">' +
+        (isPending ? '<span class="pending-text">Pending update</span>' : hearingText) + '</td>' +
+      '<td class="status-cell"><span class="' + sClass + '">' + statusText + '</span></td>' +
+      '<td><button class="edit-btn" onclick="event.stopPropagation();startEdit('+idx+')">Edit</button></td>';
+
+    tbody.appendChild(tr);
+
+    // Detail row
+    var detailTr = document.createElement("tr");
+    detailTr.className = "detail-row";
+    detailTr.id = "detail-" + idx;
+    var secondH = getVal(c, "secondHearing");
+    detailTr.innerHTML =
+      '<td colspan="6"><div class="detail-card">' +
+        '<div class="detail-group"><h4>Parties</h4><p>' + c.parties + '</p></div>' +
+        '<div class="detail-group"><h4>Attorneys</h4><p>' + c.attorneys + '</p>' +
+          '<p style="margin-top:6px"><span class="label">Role: </span>' + c.role + '</p></div>' +
+        '<div class="detail-group"><h4>Last Filing</h4><p>' + getVal(c,"lastFiling") + '</p>' +
+          (secondH ? '<p style="margin-top:6px"><span class="label">Second Hearing: </span>' + secondH + '</p>' : '') +
+        '</div>' +
+      '</div></td>';
+
+    tbody.appendChild(detailTr);
+  });
+
+  document.getElementById("totalCount").textContent = visibleCounts.total;
+}
+
+function toggleExpand(idx) {
+  var el = document.getElementById("detail-" + idx);
+  var row = document.querySelector('tr[data-idx="'+idx+'"]');
+  if (expandedRow !== null && expandedRow !== idx) {
+    document.getElementById("detail-" + expandedRow).classList.remove("visible");
+    var prev = document.querySelector('tr[data-idx="'+expandedRow+'"]');
+    if (prev) prev.classList.remove("expanded");
+  }
+  el.classList.toggle("visible");
+  row.classList.toggle("expanded");
+  expandedRow = el.classList.contains("visible") ? idx : null;
+}
+
+function startEdit(idx) {
+  var c = cases[idx];
+  var el = document.getElementById("detail-" + idx);
+  if (!el.classList.contains("visible")) toggleExpand(idx);
+
+  el.querySelector(".detail-card").innerHTML =
+    '<div class="detail-group" style="grid-column:1/-1">' +
+      '<h4>Edit Case</h4>' +
+      '<p style="margin-bottom:4px"><span class="label">Next Hearing:</span></p>' +
+      '<input class="edit-input" id="edit-hearing-'+idx+'" value="' + escHtml(getVal(c,"nextHearing")) + '">' +
+      '<p style="margin:8px 0 4px"><span class="label">Status:</span></p>' +
+      '<input class="edit-input" id="edit-status-'+idx+'" value="' + escHtml(getVal(c,"status")) + '">' +
+      '<p style="margin:8px 0 4px"><span class="label">Next Hearing Date (YYYY-MM-DD for alerts):</span></p>' +
+      '<input class="edit-input" id="edit-date-'+idx+'" value="' + escHtml(c.nextDate) + '" placeholder="2026-05-07">' +
+      '<br><button class="save-btn" onclick="saveEdit('+idx+')">Save Changes</button>' +
+    '</div>';
+}
+
+function saveEdit(idx) {
+  var c = cases[idx];
+  var h = document.getElementById("edit-hearing-"+idx).value;
+  var s = document.getElementById("edit-status-"+idx).value;
+  var d = document.getElementById("edit-date-"+idx).value;
+  edits[c.id+"_nextHearing"] = h;
+  edits[c.id+"_status"] = s;
+  if (d) c.nextDate = d;
+  if (s.toLowerCase().indexOf("pending") !== -1) c.statusType = "pending";
+  else if (s.toLowerCase().indexOf("dormant") !== -1) c.statusType = "dormant";
+  else c.statusType = "active";
+  expandedRow = null;
+  buildAlerts();
+  renderTable();
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function filterCases() { expandedRow = null; renderTable(); }
+
+function filterByCat(cat, btn) {
+  activeCat = cat;
+  document.querySelectorAll(".cat-filters .btn").forEach(function(b) { b.classList.remove("active"); });
+  btn.classList.add("active");
+  expandedRow = null;
+  renderTable();
+}
+
+function editTimestamp() {
+  var span = document.getElementById("timestampText");
+  var current = span.textContent;
+  var inp = document.createElement("input");
+  inp.value = current;
+  inp.style.cssText = "font-family:var(--font);font-size:11px;color:var(--text-secondary);background:rgba(0,0,0,0.04);border:1px solid rgba(0,113,227,0.3);border-radius:4px;padding:2px 6px;width:140px;";
+  inp.onblur = function() {
+    span.textContent = inp.value || current;
+    inp.replaceWith(span);
+  };
+  inp.onkeydown = function(e) { if (e.key === "Enter") inp.blur(); };
+  span.replaceWith(inp);
+  inp.focus();
+  inp.select();
+}
+
+// Init
+buildAlerts();
+renderTable();
+</script>
+</body>
+</html>

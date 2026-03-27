@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bingham v. Templeton">
+<meta name="theme-color" content="#0a1628">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>BINGHAM v. TEMPLETON | LITIGATION TOOLKIT</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#0a1628;--crimson:#c41e3a;--bg:#ffffff;
+  --text:#0a1628;--text-dim:#3d5068;--border:rgba(10,22,40,0.08);
+  --font:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Arial,sans-serif;
+}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
+
+.header{
+  background:var(--navy);padding:20px 24px;text-align:center;
+  padding-top:calc(12px + env(safe-area-inset-top));
+}
+.header h1{color:#fff;font-size:13px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase}
+.header .sub{color:var(--crimson);font-size:11px;font-weight:600;letter-spacing:1.8px;margin-top:4px}
+
+.content{flex:1;padding:24px 20px;max-width:500px;margin:0 auto;width:100%}
+
+.case-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:100px;
+  background:rgba(10,22,40,0.04);border:1px solid var(--border);
+  font-size:11px;font-weight:600;color:var(--text-dim);
+  letter-spacing:0.8px;margin-bottom:24px;
+}
+.case-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--crimson)}
+
+.section-label{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--text-dim);margin-bottom:12px;
+}
+
+.tool-card{
+  display:flex;align-items:center;gap:16px;
+  padding:18px 20px;margin-bottom:12px;
+  background:#fff;border:1px solid var(--border);
+  border-radius:16px;cursor:pointer;
+  transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
+  text-decoration:none;color:var(--text);
+  -webkit-tap-highlight-color:transparent;
+}
+.tool-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.06);transform:translateY(-1px)}
+.tool-card:active{transform:scale(0.98)}
+
+.tool-icon{
+  width:48px;height:48px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+}
+.tool-icon.red{background:rgba(196,30,58,0.08);color:var(--crimson)}
+.tool-icon.navy{background:rgba(10,22,40,0.06);color:var(--navy)}
+.tool-icon.blue{background:rgba(69,123,157,0.1);color:#457b9d}
+
+.tool-info{flex:1;min-width:0}
+.tool-name{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.tool-desc{font-size:12px;color:var(--text-dim);line-height:1.4}
+
+.tool-arrow{color:var(--text-dim);font-size:18px;flex-shrink:0;opacity:0.4}
+
+.status-bar{
+  display:flex;gap:12px;flex-wrap:wrap;
+  margin-top:24px;padding-top:20px;
+  border-top:1px solid var(--border);
+}
+.status-chip{
+  display:flex;align-items:center;gap:5px;
+  font-size:11px;color:var(--text-dim);font-weight:500;
+}
+.status-chip .num{font-weight:700;color:var(--navy)}
+
+.footer{
+  padding:16px 20px;text-align:center;
+  padding-bottom:calc(12px + env(safe-area-inset-bottom));
+}
+.footer p{font-size:10px;color:var(--text-dim);letter-spacing:0.3px;line-height:1.6}
+.footer .ver{margin-top:4px;font-size:9px;color:rgba(10,22,40,0.25)}
+
+.install-banner{
+  display:none;margin-top:20px;padding:14px 16px;
+  background:rgba(196,30,58,0.04);border:1px solid rgba(196,30,58,0.12);
+  border-radius:12px;font-size:12px;color:var(--text);line-height:1.5;
+}
+.install-banner strong{color:var(--crimson)}
+.install-banner.show{display:block}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Bingham v. Templeton</h1>
+  <div class="sub">Litigation Toolkit</div>
+</div>
+
+<div class="content">
+  <div class="case-badge">
+    <span class="dot"></span>
+    LASC 25STPB09444 &nbsp;|&nbsp; Dept 79 &nbsp;|&nbsp; Hon. Lynn H. Scaduto
+  </div>
+
+  <div class="section-label">Exhibits &amp; Tools</div>
+
+  <a class="tool-card" href="exhibit_comparator.html">
+    <div class="tool-icon red">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+    </div>
+    <div class="tool-info">
+      <div class="tool-name">Exhibit Comparator</div>
+      <div class="tool-desc">Side-by-side Exhibit B vs. Exhibit C with forensic overlays</div>
+    </div>
+    <span class="tool-arrow">&rsaquo;</span>
+  </a>
+
+  <a class="tool-card" href="docket_tracker.html">
+    <div class="tool-icon navy">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    </div>
+    <div class="tool-info">
+      <div class="tool-name">Docket Tracker</div>
+      <div class="tool-desc">31 active cases across the Templeton network with hearing alerts</div>
+    </div>
+    <span class="tool-arrow">&rsaquo;</span>
+  </a>
+
+  <a class="tool-card" href="pipeline_map.html">
+    <div class="tool-icon blue">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 10-16 0c0 3 2.7 7 8 11.7z"/></svg>
+    </div>
+    <div class="tool-info">
+      <div class="tool-name">Pipeline Network Map</div>
+      <div class="tool-desc">20 locations, 47 years, 163 dockets mapped across Los Angeles</div>
+    </div>
+    <span class="tool-arrow">&rsaquo;</span>
+  </a>
+
+  <div class="status-bar">
+    <div class="status-chip"><span class="num">3</span> Tools</div>
+    <div class="status-chip"><span class="num">20</span> Map Pins</div>
+    <div class="status-chip"><span class="num">31</span> Cases Tracked</div>
+    <div class="status-chip"><span class="num">163</span> Dockets</div>
+  </div>
+
+  <div class="install-banner" id="installBanner">
+    To install as an app: tap <strong>Share</strong> (bottom bar) then <strong>Add to Home Screen</strong>. Works fully offline after install.
+  </div>
+</div>
+
+<div class="footer">
+  <p>Bradley Bingham, Petitioner, In Propria Persona<br>
+  Flora Bingham Living Trust | LASC 25STPB09444</p>
+  <div class="ver">v1.0 &middot; March 2026 &middot; All data from verified court records</div>
+</div>
+
+<script>
+// Show install hint on iOS Safari (not standalone)
+if(navigator.userAgent.match(/iPhone|iPad/) && !window.navigator.standalone){
+  document.getElementById('installBanner').classList.add('show');
+}
+
+// Register service worker
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(function(){});
+}
+</script>
+</body>
+</html>
