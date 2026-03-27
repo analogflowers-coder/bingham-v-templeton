@@ -187,13 +187,7 @@ td {
 .detail-group p { font-size: 12px; color: var(--text-primary); line-height: 1.6; }
 .detail-group p span.label { color: var(--text-secondary); }
 
-/* Edit mode */
-.edit-btn {
-  background: none; border: 1px solid var(--border-strong); border-radius: 6px;
-  padding: 4px 10px; font-size: 11px; font-family: var(--font);
-  color: var(--text-secondary); cursor: pointer; transition: all var(--transition);
-}
-.edit-btn:hover { background: rgba(0,0,0,0.04); color: var(--text-primary); }
+/* Edit mode removed for security */
 .edit-input {
   font-family: var(--font); font-size: 12px; color: var(--text-primary);
   background: rgba(0,0,0,0.03); border: 1px solid rgba(0,113,227,0.3);
@@ -308,7 +302,7 @@ td {
     <th style="width:90px">Category</th>
     <th style="width:180px">Next Hearing</th>
     <th style="width:160px">Status</th>
-    <th style="width:50px"></th>
+    <!-- Edit column removed for security -->
   </tr>
 </thead>
 <tbody id="caseTableBody"></tbody>
@@ -689,7 +683,7 @@ function renderTable() {
       '<td class="hearing-cell ' + (isPending ? '' : hClass) + '">' +
         (isPending ? '<span class="pending-text">Pending update</span>' : hearingText) + '</td>' +
       '<td class="status-cell"><span class="' + sClass + '">' + statusText + '</span></td>' +
-      '<td><button class="edit-btn" onclick="event.stopPropagation();startEdit('+idx+')">Edit</button></td>';
+      '';
 
     tbody.appendChild(tr);
 
@@ -727,39 +721,7 @@ function toggleExpand(idx) {
   expandedRow = el.classList.contains("visible") ? idx : null;
 }
 
-function startEdit(idx) {
-  var c = cases[idx];
-  var el = document.getElementById("detail-" + idx);
-  if (!el.classList.contains("visible")) toggleExpand(idx);
-
-  el.querySelector(".detail-card").innerHTML =
-    '<div class="detail-group" style="grid-column:1/-1">' +
-      '<h4>Edit Case</h4>' +
-      '<p style="margin-bottom:4px"><span class="label">Next Hearing:</span></p>' +
-      '<input class="edit-input" id="edit-hearing-'+idx+'" value="' + escHtml(getVal(c,"nextHearing")) + '">' +
-      '<p style="margin:8px 0 4px"><span class="label">Status:</span></p>' +
-      '<input class="edit-input" id="edit-status-'+idx+'" value="' + escHtml(getVal(c,"status")) + '">' +
-      '<p style="margin:8px 0 4px"><span class="label">Next Hearing Date (YYYY-MM-DD for alerts):</span></p>' +
-      '<input class="edit-input" id="edit-date-'+idx+'" value="' + escHtml(c.nextDate) + '" placeholder="2026-05-07">' +
-      '<br><button class="save-btn" onclick="saveEdit('+idx+')">Save Changes</button>' +
-    '</div>';
-}
-
-function saveEdit(idx) {
-  var c = cases[idx];
-  var h = document.getElementById("edit-hearing-"+idx).value;
-  var s = document.getElementById("edit-status-"+idx).value;
-  var d = document.getElementById("edit-date-"+idx).value;
-  edits[c.id+"_nextHearing"] = h;
-  edits[c.id+"_status"] = s;
-  if (d) c.nextDate = d;
-  if (s.toLowerCase().indexOf("pending") !== -1) c.statusType = "pending";
-  else if (s.toLowerCase().indexOf("dormant") !== -1) c.statusType = "dormant";
-  else c.statusType = "active";
-  expandedRow = null;
-  buildAlerts();
-  renderTable();
-}
+/* Edit functions removed — data is read-only for security. Updates provided directly by Bradley Bingham via authenticated build pipeline. */
 
 function escHtml(str) {
   return str.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
