@@ -1,4 +1,4 @@
-var CACHE_NAME = 'bingham-v-templeton-v1';
+var CACHE_NAME = 'bingham-v-templeton-v2';
 var URLS = [
   './',
   './index.html',
